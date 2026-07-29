@@ -81,7 +81,14 @@ if (!checkRateLimit()) {
     exit;
 }
 
-// Initialize performance monitor
+// Initialize performance monitor (com fallback de segurança)
+if (!class_exists('PerformanceMonitor')) {
+    class PerformanceMonitor {
+        public function logRequest($method, $uri, $responseTime, $status, $details) {
+            // Just silently ignore if the original class doesn't exist
+        }
+    }
+}
 $perfMonitor = new PerformanceMonitor();
 error_log("REQUEST: method=" . ($_SERVER['REQUEST_METHOD'] ?? 'CLI') . ", uri=" . ($_SERVER['REQUEST_URI'] ?? '/') . ", ip=" . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
 
